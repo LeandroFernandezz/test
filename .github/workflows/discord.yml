@@ -1,19 +1,20 @@
+# .github/workflows/discord.yml
 name: Notify Discord
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]  # change if needed
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Send message to Discord
+      - name: Post to Discord
         uses: Ilshidur/action-discord@0.4.0
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}  # <-- map secret to expected env var
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          message: |
+          args: |
             **${{ github.actor }}** pushed to **${{ github.repository }}**
             Branch: `${{ github.ref_name }}`
-            Commit: ${{ github.sha }}
+            Compare: ${{ github.event.compare }}
 
